@@ -39,9 +39,9 @@ async function registrarEntrada(usuario) {
     const minutos = today.getMinutes();
     const segundos = today.getSeconds();
     const tiempo = hora+":"+minutos+":"+segundos;
-    const params = [usuario,fecha,tiempo];
+    const params = [usuario,fecha,tiempo, 'ENTRADA'];
     try {
-        const asistencia = await BD._query("INSERT INTO asistencia (vendedor,fecha,hora,tipo,estatus) VALUES (?,?,?,1,1)", params);
+        const asistencia = await BD._query("INSERT INTO asistencia (vendedor,fecha,hora,tipo,estatus) VALUES (?,?,?,?,1)", params);
         console.log("ASISTENCIA", asistencia);
         return {fecha, tiempo};
     } catch (error) {
