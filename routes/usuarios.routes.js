@@ -1,11 +1,11 @@
 const { Router } = require("express");
-const {listarUsuariosHandler, validarLoginUsuarioHandler,registrarEntradaHandler} = require('../handlers/usuarios.handler.js');
+const {listarUsuariosHandler, validarLoginUsuarioHandler, registrarAsistenciaHandler} = require('../handlers/usuarios.handler.js');
 
 const router = Router();
 
 router.get('/', listarUsuariosHandler);
 router.post('/login', validarLoginUsuarioHandler);
-router.post('/entrada', registrarEntradaHandler);
+router.post('/asistencia', registrarAsistenciaHandler);
 
 module.exports = router;
 

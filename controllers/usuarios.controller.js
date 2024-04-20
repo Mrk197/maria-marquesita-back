@@ -27,7 +27,7 @@ async function validarUsuario(usuario, clave) {
     }
 }
 
-async function registrarEntrada(usuario) {
+async function registrarAsistencia(usuario, tipo) {
     console.log(usuario);
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
@@ -39,7 +39,7 @@ async function registrarEntrada(usuario) {
     const minutos = today.getMinutes();
     const segundos = today.getSeconds();
     const tiempo = hora+":"+minutos+":"+segundos;
-    const params = [usuario,fecha,tiempo, 'ENTRADA'];
+    const params = [usuario,fecha,tiempo, tipo];
     try {
         const asistencia = await BD._query("INSERT INTO asistencia (vendedor,fecha,hora,tipo,estatus) VALUES (?,?,?,?,1)", params);
         console.log("ASISTENCIA", asistencia);
@@ -53,5 +53,6 @@ async function registrarEntrada(usuario) {
 module.exports = {
     listarUsuarios,
     validarUsuario,
-    registrarEntrada
+    registrarEntrada,
+    registrarAsistencia
 }

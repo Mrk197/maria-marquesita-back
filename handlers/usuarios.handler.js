@@ -1,4 +1,4 @@
-const {listarUsuarios, validarUsuario, registrarEntrada} = require('../controllers/usuarios.controller.js');
+const {listarUsuarios, validarUsuario, registrarAsistencia} = require('../controllers/usuarios.controller.js');
 
 const listarUsuariosHandler = async (req, res) => {
     try {
@@ -22,10 +22,10 @@ const validarLoginUsuarioHandler = async (req, res) => {
     }
 }
 
-const registrarEntradaHandler = async (req,res) => {
+const registrarAsistenciaHandler = async (req,res) => {
     try {
-        const {usuario} = req.body;
-        const response = await registrarEntrada(usuario);
+        const {usuario, tipo} = req.body;
+        const response = await registrarAsistencia(usuario, tipo);
         console.log('response',response);
         if(response) res.status(200).json({status:'ok', data:response});
         else res.status(400).json({status:'fail',error: "Error en consulta"});
@@ -37,5 +37,6 @@ const registrarEntradaHandler = async (req,res) => {
 module.exports = {
     listarUsuariosHandler,
     validarLoginUsuarioHandler,
-    registrarEntradaHandler
+    registrarEntradaHandler,
+    registrarAsistenciaHandler
 }
