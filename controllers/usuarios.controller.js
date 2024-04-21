@@ -27,7 +27,7 @@ async function validarUsuario(usuario, clave) {
     }
 }
 
-async function registrarAsistencia(usuario, tipo) {
+async function registrarAsistencia(usuario, tipo, id) {
     console.log(usuario);
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
@@ -39,11 +39,42 @@ async function registrarAsistencia(usuario, tipo) {
     const minutos = today.getMinutes();
     const segundos = today.getSeconds();
     const tiempo = hora+":"+minutos+":"+segundos;
-    const params = [usuario,fecha,tiempo, tipo];
+    const params = [tiempo, id];
     try {
-        const asistencia = await BD._query("INSERT INTO asistencia (vendedor,fecha,hora,tipo,estatus) VALUES (?,?,?,?,1)", params);
-        console.log("ASISTENCIA", asistencia);
+        // const asistencia = await BD._query("INSERT INTO asistencia (vendedor,fecha,hora,tipo,estatus) VALUES (?,?,?,?,1)", params);
+        // console.log("ASISTENCIA", asistencia);
+        if (tipo === 'ENTRADA') {
+            const asistencia = await BD._query("UPDATE asignaciones SET entrada=? WHERE id=?", params);
+            console.log("ASISTENCIA-ENTRADA", asistencia);
+        }
+        else{
+            const asistencia = await BD._query("UPDATE asignaciones SET salida=? WHERE id=?", params);
+            console.log("ASISTENCIA-SALIDA", asistencia);
+        }
         return {fecha, tiempo};
+    } catch (error) {
+        console.log("Error:", error);
+        return false;
+    }
+}
+
+async function obtenerAsignacion(usuario) {
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Se agrega 1 al mes porque los meses comienzan desde 0
+    const day = String(today.getDate()).padStart(2, '0');
+    const fecha = `${year}-${month}-${day}`;
+    try {
+        const params = [fecha, usuario]
+        // const asignacion = await BD._query(`SELECT a.*, al.nombre AS nombreAlmacen, l.nombre AS nombreLugar 
+        //     FROM asignaciones a 
+        //     LEFT JOIN almacenes al ON a.almacen=al.id 
+        //     LEFT JOIN lugares l ON a.lugar=l.id 
+        //     WHERE a.fecha=? AND a.vendedor=? AND a.estatus=1;`, params);
+        const asignacion = await BD._query("SELECT * FROM asignacioneslistado WHERE fecha=? AND idvendedor=? AND estatus=1", params);
+        console.log('ASIGNACION', asignacion);
+        return asignacion;
     } catch (error) {
         console.log("Error:", error);
         return false;
@@ -53,6 +84,6 @@ async function registrarAsistencia(usuario, tipo) {
 module.exports = {
     listarUsuarios,
     validarUsuario,
-    registrarEntrada,
-    registrarAsistencia
+    registrarAsistencia,
+    obtenerAsignacion
 }
