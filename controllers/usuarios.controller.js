@@ -44,7 +44,7 @@ async function registrarAsistencia(usuario, tipo, id) {
         // const asistencia = await BD._query("INSERT INTO asistencia (vendedor,fecha,hora,tipo,estatus) VALUES (?,?,?,?,1)", params);
         // console.log("ASISTENCIA", asistencia);
         if (tipo === 'ENTRADA') {
-            const asistencia = await BD._query("UPDATE asignaciones SET entrada=? WHERE id=?", params);
+            const asistencia = await BD._query("UPDATE asignaciones SET entrada=?, estatus=2 WHERE id=?", params);
             console.log("ASISTENCIA-ENTRADA", asistencia);
         }
         else{
