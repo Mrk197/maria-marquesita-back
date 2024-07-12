@@ -61,7 +61,7 @@ const consultarExistenciasIngredientes = async (req, res) => {
 const insertarExistenciaIngredienteHandler = async (req, res) => {
     const {data, moto} = req.body;
     try {
-        const inserciones = data?.map(async existenciaing => {
+        const inserciones = data.map(async existenciaing => {
             return await insertarExistenciaIngrediente(existenciaing.existenciaFin, existenciaing.ingrediente, moto);
         });
         const resultados = await Promise.all(inserciones);
@@ -77,7 +77,7 @@ const insertarExistenciaIngredienteHandler = async (req, res) => {
 const insertarVentasDelDiaHandler = async (req, res) => {
     const {ventas, ventasproductos, ventasingredientes} = req.body;
     try {
-        const insercionesVentas = ventas?.map(async venta => {
+        const insercionesVentas = ventas.map(async venta => {
             return await insertarVenta(venta);
         });
         const resultadosVentas = await Promise.all(insercionesVentas);
@@ -86,7 +86,7 @@ const insertarVentasDelDiaHandler = async (req, res) => {
         console.log("ventasproductos ",ventasproductos);
 
         //una vez que ya se insertaron las ventas, insertar cada ventaproducto y obtener el idServidor filtrando el idApp
-        const insercionesVentasProductos = ventasproductos?.map(async ventaproducto => {
+        const insercionesVentasProductos = ventasproductos.map(async ventaproducto => {
             const ids = resultadosVentas.find(resultado => resultado.idApp === ventaproducto.venta);
             console.log("idServidor", ids);
             ventaproducto.venta = ids.idServidor;
@@ -95,7 +95,7 @@ const insertarVentasDelDiaHandler = async (req, res) => {
         const resultadosVentasProductos = await Promise.all(insercionesVentasProductos);
         console.log("resultadosVentasProductos", resultadosVentasProductos);
 
-        const insercionesVentasIngredientes = ventasingredientes?.map(async ventaingrediente => {
+        const insercionesVentasIngredientes = ventasingredientes.map(async ventaingrediente => {
             const ids = resultadosVentas.find(resultado => resultado.idApp === ventaingrediente.venta);
             console.log("idServidor ingrediente", ids);
             ventaingrediente.venta = ids.idServidor;
