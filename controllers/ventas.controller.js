@@ -65,7 +65,7 @@ async function insertarExistenciaIngrediente(existencia, ingrdiente, moto) {
 async function obtenerInventarioMoto(moto, asignacion) {
     try {
         const existenciasingredientes = await obtenerExistenciasIngredientes(moto);
-        //console.log('Existencias Moto ', existenciasingredientes);
+        console.log('Existencias Moto ', existenciasingredientes);
 
         if (existenciasingredientes.length > 0) {
             const inserciones = existenciasingredientes.map(async (item) => {
@@ -128,6 +128,25 @@ async function insertarVentaCumplimiento(ventaTotal, asignacion) {
     }
 }
 
+async function insertarInventarioMotoFinal(inventarioIngredientes) {
+    try {
+        const inserciones = inventarioIngredientes.map(async (item) => {
+            const params = [item.existenciacalculada, item.existenciafin, item.asignacion, item.ingrediente];
+            const inventario = await BD._query(
+                "UPDATE inventariosmotos SET existenciacalculada=?, existenciafin=? WHERE asignacion=? AND ingrediente=?",
+                params
+            );
+            return inventario;
+        });
+
+        // Espera a que todas las inserciones se completen
+        const resultados = await Promise.all(inserciones);
+        return resultados;
+    } catch (error) {
+        console.log('Error en insertarInventarioMotoFinal:', error);
+        return false;
+    }
+}
 
 module.exports = {
     listarProductos,
@@ -139,5 +158,6 @@ module.exports = {
     insertarVentasIngredientes,
     obtenerExistenciasIngredientes,
     insertarExistenciaIngrediente,
-    insertarVentaCumplimiento
+    insertarVentaCumplimiento,
+    insertarInventarioMotoFinal
 }
