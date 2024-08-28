@@ -38,7 +38,10 @@ async function listarProductosIngredientes() {
 async function obtenerExistenciasIngredientes(moto) {
     try {
         const params = [moto];
-        const existenciasingredientes = await BD._query("SELECT * FROM existenciasingredientes WHERE almacen=?", params);
+        const existenciasingredientes = await BD._query(`SELECT ei.*, i.nombre, i.medida
+            FROM existenciasingredientes ei
+            LEFT JOIN ingredientes i ON ei.ingrediente=i.id
+            WHERE ei.almacen=?`, params);
         console.log('Existencias ', existenciasingredientes);
         return existenciasingredientes;
     } catch (error) {

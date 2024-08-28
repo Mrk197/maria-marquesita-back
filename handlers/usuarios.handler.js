@@ -24,8 +24,8 @@ const validarLoginUsuarioHandler = async (req, res) => {
 
 const registrarAsistenciaHandler = async (req,res) => {
     try {
-        const {usuario, tipo, asignacionId} = req.body;
-        const response = await registrarAsistencia(usuario, tipo, asignacionId);
+        const {usuario, tipo, asignacionId, notas} = req.body;
+        const response = await registrarAsistencia(usuario, tipo, asignacionId, notas);
         console.log('response',response);
         if(response) res.status(200).json({status:'ok', data:response});
         else res.status(400).json({status:'fail',error: "Error en consulta"});
