@@ -27,8 +27,8 @@ async function validarUsuario(usuario, clave) {
     }
 }
 
-async function registrarAsistencia(usuario, tipo, id) {
-    console.log(usuario);
+async function registrarAsistencia(usuario, tipo, id, notas) {
+    console.log("Datos registrarAsistencia",usuario, tipo, id, notas);
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const year = today.getFullYear();
@@ -48,7 +48,7 @@ async function registrarAsistencia(usuario, tipo, id) {
             console.log("ASISTENCIA-ENTRADA", asistencia);
         }
         else{
-            const asistencia = await BD._query("UPDATE asignaciones SET salida=?, estatus=3 WHERE id=?", params);
+            const asistencia = await BD._query("UPDATE asignaciones SET salida=?, estatus=3, notasinventario=? WHERE id=?", [tiempo, notas, id]);
             console.log("ASISTENCIA-SALIDA", asistencia);
         }
         return {fecha, tiempo};
