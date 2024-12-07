@@ -39,12 +39,19 @@ async function registrarAsistencia(usuario, tipo, id, notas) {
     const minutos = today.getMinutes();
     const segundos = today.getSeconds();
     const tiempo = hora+":"+minutos+":"+segundos;
-    const params = [tiempo, id];
     try {
         // const asistencia = await BD._query("INSERT INTO asistencia (vendedor,fecha,hora,tipo,estatus) VALUES (?,?,?,?,1)", params);
         // console.log("ASISTENCIA", asistencia);
         if (tipo === 'ENTRADA') {
-            const asistencia = await BD._query("UPDATE asignaciones SET entrada=?, estatus=2 WHERE id=?", params);
+            const asistencia = await BD._query("UPDATE asignaciones SET entrada=? WHERE id=?", [tiempo, id]);
+            console.log("ASISTENCIA-ENTRADA", asistencia);
+        }
+        else if(tipo === 'ENTRADA-INVENTARIO'){
+            const asistencia = await BD._query("UPDATE asignaciones SET estatus=2,notasinventario=?  WHERE id=?", [notas,id]);
+            console.log("ASISTENCIA-INVENTARIO", asistencia);
+        }
+        else if (tipo === 'ENTRADA-DILIGENCIA') {
+            const asistencia = await BD._query("UPDATE asignaciones SET estatus=2,entrada=? WHERE id=?", [tiempo, id]);
             console.log("ASISTENCIA-ENTRADA", asistencia);
         }
         else{
