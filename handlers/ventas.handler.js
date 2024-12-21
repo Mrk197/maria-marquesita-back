@@ -75,7 +75,7 @@ const insertarExistenciaIngredienteHandler = async (req, res) => {
 };
 
 const insertarVentasDelDiaHandler = async (req, res) => {
-    const {ventas, ventasproductos, ventasingredientes} = req.body;
+    const {ventas, ventasproductos, ventasingredientes, datosVenta} = req.body;
     try {
         const insercionesVentas = ventas.map(async venta => {
             return await insertarVenta(venta);
@@ -99,7 +99,7 @@ const insertarVentasDelDiaHandler = async (req, res) => {
             const ids = resultadosVentas.find(resultado => resultado.idApp === ventaingrediente.venta);
             console.log("idServidor ingrediente", ids);
             ventaingrediente.venta = ids.idServidor;
-            return await insertarVentasIngredientes(ventaingrediente);
+            return await insertarVentasIngredientes(ventaingrediente, datosVenta);
         });
         const resultadosVentasIngredientes = await Promise.all(insercionesVentasIngredientes);
         console.log("resultadosVentasIngredientes", resultadosVentasIngredientes);

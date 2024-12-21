@@ -107,9 +107,30 @@ async function insertarVentasProductos(ventasproductos) {
     }
 }
 
-async function insertarVentasIngredientes(ventasingredientes ) {
+async function insertarVentasIngredientes(ventasingredientes,datosVenta) {
     try {
+        const today = new Date(datosVenta.fechaAsignacion);
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Se agrega 1 al mes porque los meses comienzan desde 0
+        const day = String(today.getDate()).padStart(2, '0');
+        const fecha = `${year}-${month}-${day}`;
+
         const retorno = await BD._query('INSERT INTO ventasingredientes SET ?', [ventasingredientes ]);
+        const nota = `SALIDA VENTA ${datosVenta.vendedor} en ${datosVenta.lugar}`
+        //registrar el movimiento del ingrediente
+        //ventasingredientes.venta -> id de la venta
+        const params = [
+            ventasingredientes.venta, 
+            "SALIDAV",
+            fecha, 
+            datosVenta.almacen, 
+            ventasingredientes.ingrediente, 
+            ventasingredientes.cantidad,
+            nota,
+            null,
+            1
+        ];
+        const movimiento = await BD._query('INSERT INTO movimientosingredientes (idmovimiento,tipo,fecha,almacen,ingrediente,cantidad,notas,responsabilidad,estatus) VALUES (?,?,?,?,?,?,?,?,?)', params);
         return retorno.insertId;
     } catch (error) {
         console.log("Error al insertar venta",error);
@@ -119,8 +140,24 @@ async function insertarVentasIngredientes(ventasingredientes ) {
 
 async function insertarVentaCumplimiento(ventaTotal, asignacion) {
     try {
-        const params = [ventaTotal, ventaTotal, asignacion];
+        const today = new Date(asignacion.fecha);
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Se agrega 1 al mes porque los meses comienzan desde 0
+        const day = String(today.getDate()).padStart(2, '0');
+        const fecha = `${year}-${month}-${day}`;
+
+        const params = [ventaTotal, ventaTotal, asignacion.id];
         const retorno = await BD._query("UPDATE asignaciones SET venta=?, cumplimiento=(? * 100)/cuota WHERE id=?", params);
+        const descripcion = `VENTA ${asignacion.almacen}`
+        //sumar venta del dia al saldo de la caja chica 
+        const registroCuenta = await BD._query("UPDATE cuentas set saldo=saldo+? WHERE id=2",[ventaTotal]);
+        console.log("REGISRO CUENTA", registroCuenta);
+        
+        //y registrar moviento en de dinero
+        const params2 = [fecha,2,"INGRESO", 1,descripcion, ventaTotal,1];
+        const registroMovimiento = await BD._query("INSERT INTO movimientosdinero (fecha,cuenta,tipo,concepto,descripcion,importe,estatus) VALUES (?,?,?,?,?,?,?)", params2);
+        console.log(registroMovimiento);
+        
         return retorno
     } catch (error) {
         console.log("Error al insertar VentaCumplimiento",error);
