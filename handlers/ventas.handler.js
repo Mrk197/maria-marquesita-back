@@ -62,7 +62,7 @@ const insertarExistenciaIngredienteHandler = async (req, res) => {
     const {data, moto} = req.body;
     try {
         const inserciones = data.map(async existenciaing => {
-            return await insertarExistenciaIngrediente(existenciaing.existenciaFin, existenciaing.ingrediente, moto);
+            return await insertarExistenciaIngrediente(existenciaing.existenciacalculada, existenciaing.ingrediente, moto);
         });
         const resultados = await Promise.all(inserciones);
         res.status(200).json({ status: 'ok', data: resultados });
