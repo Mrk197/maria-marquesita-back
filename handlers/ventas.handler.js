@@ -1,4 +1,4 @@
-const { listarProductos, listarIngredientes, obtenerInventarioMoto, listarProductosIngredientes, obtenerExistenciasIngredientes, insertarExistenciaIngrediente, insertarVenta, insertarVentasProductos, insertarVentasIngredientes, insertarVentaCumplimiento, insertarInventarioMotoFinal } = require("../controllers/ventas.controller");
+const { listarProductos, listarIngredientes, obtenerInventarioMoto, listarProductosIngredientes, obtenerExistenciasIngredientes, insertarExistenciaIngrediente, insertarVenta, insertarVentasProductos, insertarVentasIngredientes, insertarVentaCumplimiento, insertarInventarioMotoFinal, consultaDeVentas } = require("../controllers/ventas.controller");
 
 const listarProductosHandler = async (req, res) => {
     try {
@@ -140,6 +140,18 @@ const insertarInventarioMotoFinalHandler = async (req, res) => {
     }
 };
 
+const obtenerConsultaDeVentasHandler = async (req, res) => {
+    const {fechaInicio, fechaFin, vendedor} = req.body;
+    console.log("body",req.body);
+    
+    try {
+        const ventas = await consultaDeVentas(fechaInicio, fechaFin, vendedor);
+        res.status(200).json({status:'ok', data:ventas});
+    } catch (error) {
+        res.status(400).json({status:'fail', error:error.message});
+    }
+}
+
 module.exports = {
     listarProductosHandler,
     listarIngredientesHandler,
@@ -149,5 +161,6 @@ module.exports = {
     insertarExistenciaIngredienteHandler,
     insertarVentasDelDiaHandler,
     insertarVentaCumplimientoHandler,
-    insertarInventarioMotoFinalHandler
+    insertarInventarioMotoFinalHandler,
+    obtenerConsultaDeVentasHandler
 }

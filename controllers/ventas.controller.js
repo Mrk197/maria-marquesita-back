@@ -185,6 +185,18 @@ async function insertarInventarioMotoFinal(inventarioIngredientes) {
     }
 }
 
+async function consultaDeVentas(fechaInicio, fechaFin, vendedor) {
+    try {
+        const params = [vendedor,fechaInicio, fechaFin];
+        const ventas = await BD._query("SELECT * FROM asignaciones WHERE vendedor=? AND fecha BETWEEN ? AND ?", params);
+        console.log("VENTAS",ventas);
+        return ventas;
+        
+    } catch (error) {
+        return false;
+    }
+}
+
 module.exports = {
     listarProductos,
     listarIngredientes,
@@ -196,5 +208,6 @@ module.exports = {
     obtenerExistenciasIngredientes,
     insertarExistenciaIngrediente,
     insertarVentaCumplimiento,
-    insertarInventarioMotoFinal
+    insertarInventarioMotoFinal,
+    consultaDeVentas
 }
