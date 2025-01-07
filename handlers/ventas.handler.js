@@ -142,7 +142,6 @@ const insertarInventarioMotoFinalHandler = async (req, res) => {
 
 const obtenerConsultaDeVentasHandler = async (req, res) => {
     const {fechaInicio, fechaFin, vendedor} = req.body;
-    console.log("body",req.body);
     
     try {
         const ventas = await consultaDeVentas(fechaInicio, fechaFin, vendedor);
