@@ -116,7 +116,7 @@ async function insertarVentasIngredientes(ventasingredientes,datosVenta) {
         const fecha = `${year}-${month}-${day}`;
 
         const retorno = await BD._query('INSERT INTO ventasingredientes SET ?', [ventasingredientes ]);
-        const nota = `SALIDA VENTA ${datosVenta.vendedor} en ${datosVenta.lugar}`
+        const nota = `SALIDA VENTA ${datosVenta.vendedor} EN ${datosVenta.lugar} ASIGNACION=${datosVenta.asignacion}`
         //registrar el movimiento del ingrediente
         //ventasingredientes.venta -> id de la venta
         const params = [
