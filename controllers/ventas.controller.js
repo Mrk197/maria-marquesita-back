@@ -41,7 +41,7 @@ async function obtenerExistenciasIngredientes(moto) {
         const existenciasingredientes = await BD._query(`SELECT ei.*, i.nombre, i.medida
             FROM existenciasingredientes ei
             LEFT JOIN ingredientes i ON ei.ingrediente=i.id
-            WHERE ei.almacen=?`, params);
+            WHERE ei.almacen=? ORDER BY i.nombre ASC`, params);
         console.log('Existencias ', existenciasingredientes);
         return existenciasingredientes;
     } catch (error) {
