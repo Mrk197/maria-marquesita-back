@@ -1,4 +1,4 @@
-const {listarUsuarios, validarUsuario, registrarAsistencia, obtenerAsignacion} = require('../controllers/usuarios.controller.js');
+const {listarUsuarios, validarUsuario, registrarAsistencia, obtenerAsignacion, registrarHorasTrabajadas} = require('../controllers/usuarios.controller.js');
 
 const listarUsuariosHandler = async (req, res) => {
     try {
@@ -34,6 +34,17 @@ const registrarAsistenciaHandler = async (req,res) => {
     }
 }
 
+const registrarHorasTrabajadasHandler = async (req, res) => {
+    try {
+        const {asignacionId, horasT} = req.body;
+        const response = await registrarHorasTrabajadas(asignacionId, horasT);
+        if(response) res.status(200).json({status:'ok', data:response});
+        else res.status(400).json({status:'fail',error: "Error en consulta"});
+    } catch (error) {
+        res.status(400).json({status:'fail',error: error.message});
+    }
+};
+
 const obtenerAsignacionHandler = async (req,res) => {
     try {
         const {usuario} = req.query;
@@ -49,5 +60,6 @@ module.exports = {
     listarUsuariosHandler,
     validarLoginUsuarioHandler,
     registrarAsistenciaHandler,
-    obtenerAsignacionHandler
+    obtenerAsignacionHandler,
+    registrarHorasTrabajadasHandler
 }

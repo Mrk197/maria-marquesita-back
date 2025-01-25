@@ -29,6 +29,7 @@ async function validarUsuario(usuario, clave) {
 
 async function registrarAsistencia(usuario, tipo, id, notas) {
     console.log("Datos registrarAsistencia",usuario, tipo, id, notas);
+    let horast= [];
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const year = today.getFullYear();
@@ -56,11 +57,21 @@ async function registrarAsistencia(usuario, tipo, id, notas) {
         }
         else{
             const asistencia = await BD._query("UPDATE asignaciones SET salida=?, estatus=3, notasinventario=? WHERE id=?", [tiempo, notas, id]);
+            horast =  await BD._query("SELECT id,fecha,entrada,salida, TIMEDIFF(salida, entrada) as tiempodif FROM asignaciones WHERE id=?", [id]);
             console.log("ASISTENCIA-SALIDA", asistencia);
         }
-        return {fecha, tiempo};
+        return {fecha, tiempo, horast};
     } catch (error) {
         console.log("Error:", error);
+        return false;
+    }
+}
+
+async function registrarHorasTrabajadas(id, horas) {
+    try {
+        const horastrabajadas = await BD._query("UPDATE asignaciones SET horastrabajadas=? WHERE id=?", [horas, id]);
+        console.log("horastrabajadas", horastrabajadas);
+    } catch (error) {
         return false;
     }
 }
@@ -92,5 +103,6 @@ module.exports = {
     listarUsuarios,
     validarUsuario,
     registrarAsistencia,
-    obtenerAsignacion
+    obtenerAsignacion,
+    registrarHorasTrabajadas
 }
