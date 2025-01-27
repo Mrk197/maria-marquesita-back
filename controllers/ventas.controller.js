@@ -41,7 +41,7 @@ async function obtenerExistenciasIngredientes(moto) {
         const existenciasingredientes = await BD._query(`SELECT ei.*, i.nombre, i.medida
             FROM existenciasingredientes ei
             LEFT JOIN ingredientes i ON ei.ingrediente=i.id
-            WHERE ei.almacen=?`, params);
+            WHERE ei.almacen=? ORDER BY i.nombre ASC`, params);
         console.log('Existencias ', existenciasingredientes);
         return existenciasingredientes;
     } catch (error) {
@@ -116,7 +116,7 @@ async function insertarVentasIngredientes(ventasingredientes,datosVenta) {
         const fecha = `${year}-${month}-${day}`;
 
         const retorno = await BD._query('INSERT INTO ventasingredientes SET ?', [ventasingredientes ]);
-        const nota = `SALIDA VENTA ${datosVenta.vendedor} en ${datosVenta.lugar}`
+        const nota = `SALIDA VENTA ${datosVenta.vendedor} EN ${datosVenta.lugar} ASIGNACION=${datosVenta.asignacion}`
         //registrar el movimiento del ingrediente
         //ventasingredientes.venta -> id de la venta
         const params = [
@@ -185,6 +185,18 @@ async function insertarInventarioMotoFinal(inventarioIngredientes) {
     }
 }
 
+async function consultaDeVentas(fechaInicio, fechaFin, vendedor) {
+    try {
+        const params = [vendedor,fechaInicio, fechaFin];
+        const ventas = await BD._query("SELECT * FROM asignaciones WHERE vendedor=? AND fecha BETWEEN ? AND ?", params);
+        console.log("VENTAS",ventas);
+        return ventas;
+        
+    } catch (error) {
+        return false;
+    }
+}
+
 module.exports = {
     listarProductos,
     listarIngredientes,
@@ -196,5 +208,6 @@ module.exports = {
     obtenerExistenciasIngredientes,
     insertarExistenciaIngrediente,
     insertarVentaCumplimiento,
-    insertarInventarioMotoFinal
+    insertarInventarioMotoFinal,
+    consultaDeVentas
 }
