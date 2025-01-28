@@ -188,9 +188,9 @@ async function insertarVentaCumplimiento(ventaTotal, asignacion) {
 async function insertarInventarioMotoFinal(inventarioIngredientes) {
     try {
         const inserciones = inventarioIngredientes.map(async (item) => {
-            const params = [item.existenciacalculada, item.existenciafin, item.asignacion, item.ingrediente];
+            const params = [item.existenciainicio,item.existenciacalculada, item.existenciafin, item.asignacion, item.ingrediente];
             const inventario = await BD._query(
-                "UPDATE inventariosmotos SET existenciacalculada=?, existenciafin=? WHERE asignacion=? AND ingrediente=?",
+                "UPDATE inventariosmotos SET existenciainicio=?, existenciacalculada=?, existenciafin=? WHERE asignacion=? AND ingrediente=?",
                 params
             );
             return inventario;
