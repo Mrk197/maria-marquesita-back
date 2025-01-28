@@ -10,6 +10,7 @@ const {
     insertarVentaCumplimientoHandler,
     insertarInventarioMotoFinalHandler,
     obtenerConsultaDeVentasHandler,
+    insertarInventarioMotoHandler,
 } = require("../handlers/ventas.handler");
 
 const router = Router();
@@ -23,6 +24,7 @@ router.post('/existenciasingredientes', insertarExistenciaIngredienteHandler);
 router.post('/ventasDelDia', insertarVentasDelDiaHandler);
 router.post('/ventaCumplimiento', insertarVentaCumplimientoHandler);
 router.put('/inventarioMoto', insertarInventarioMotoFinalHandler);
-router.post('/ventasDia', obtenerConsultaDeVentasHandler)
+router.post('/ventasDia', obtenerConsultaDeVentasHandler);
+router.post('/inventarioMoto', insertarInventarioMotoHandler);
 
 module.exports = router;

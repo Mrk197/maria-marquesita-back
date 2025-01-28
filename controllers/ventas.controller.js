@@ -67,6 +67,27 @@ async function obtenerInventarioMoto(moto, asignacion) {
         const existenciasingredientes = await obtenerExistenciasIngredientes(moto);
         console.log('Existencias Moto ', existenciasingredientes);
 
+        // if (existenciasingredientes.length > 0) {
+        //     const inserciones = existenciasingredientes.map(async (item) => {
+        //         const params = [asignacion, item.ingrediente, item.existencia, item.existencia];
+        //         const inventario = await BD._query("INSERT INTO inventariosmotos (asignacion, ingrediente, existenciainicio, existenciacalculada,existenciafin) VALUES (?, ?, ?, ?, 0)", params);
+        //         //console.log("Inventario", inventario);
+        //         return inventario;
+        //     });
+
+        //     // Espera a que todas las inserciones se completen
+        //     await Promise.all(inserciones);
+        // }
+
+        return existenciasingredientes;
+    } catch (error) {
+        console.error('Error en obtenerInventarioMoto:', error);
+        return false;
+    }
+}
+
+async function insertarInventarioMoto(existenciasingredientes, asignacion) {
+    try {
         if (existenciasingredientes.length > 0) {
             const inserciones = existenciasingredientes.map(async (item) => {
                 const params = [asignacion, item.ingrediente, item.existencia, item.existencia];
@@ -74,14 +95,13 @@ async function obtenerInventarioMoto(moto, asignacion) {
                 //console.log("Inventario", inventario);
                 return inventario;
             });
-
+    
             // Espera a que todas las inserciones se completen
             await Promise.all(inserciones);
         }
-
-        return existenciasingredientes;
+        return true;
     } catch (error) {
-        console.error('Error en obtenerInventarioMoto:', error);
+        console.log(error);
         return false;
     }
 }
@@ -209,5 +229,6 @@ module.exports = {
     insertarExistenciaIngrediente,
     insertarVentaCumplimiento,
     insertarInventarioMotoFinal,
-    consultaDeVentas
+    consultaDeVentas,
+    insertarInventarioMoto
 }

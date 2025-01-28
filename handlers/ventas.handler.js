@@ -1,4 +1,4 @@
-const { listarProductos, listarIngredientes, obtenerInventarioMoto, listarProductosIngredientes, obtenerExistenciasIngredientes, insertarExistenciaIngrediente, insertarVenta, insertarVentasProductos, insertarVentasIngredientes, insertarVentaCumplimiento, insertarInventarioMotoFinal, consultaDeVentas } = require("../controllers/ventas.controller");
+const { listarProductos, listarIngredientes, obtenerInventarioMoto, listarProductosIngredientes, obtenerExistenciasIngredientes, insertarExistenciaIngrediente, insertarVenta, insertarVentasProductos, insertarVentasIngredientes, insertarVentaCumplimiento, insertarInventarioMotoFinal, consultaDeVentas, insertarInventarioMoto } = require("../controllers/ventas.controller");
 
 const listarProductosHandler = async (req, res) => {
     try {
@@ -43,6 +43,19 @@ const obtenerInventarioMotoHandler = async (req, res) => {
         if(response) res.status(200).json({status:'ok', data:response});
         else res.status(400).json({status:'fail',error: "Error en consulta"});
     } catch (error) {
+        res.status(400).json({status:'fail',error: error.message});
+    }
+};
+
+const insertarInventarioMotoHandler = async (req, res) => {
+    try {
+        const {existenciasingredientes, asignacion} = req.body;
+        const response = await insertarInventarioMoto(existenciasingredientes, asignacion)
+        console.log(response);
+        if(response) res.status(200).json({status:'ok', data:response});
+        else res.status(400).json({status:'fail',error: "Error en consulta"});
+    } catch (error) {
+        console.log(error);
         res.status(400).json({status:'fail',error: error.message});
     }
 };
@@ -161,5 +174,6 @@ module.exports = {
     insertarVentasDelDiaHandler,
     insertarVentaCumplimientoHandler,
     insertarInventarioMotoFinalHandler,
-    obtenerConsultaDeVentasHandler
+    obtenerConsultaDeVentasHandler,
+    insertarInventarioMotoHandler
 }
